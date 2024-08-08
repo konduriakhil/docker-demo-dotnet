@@ -7,6 +7,7 @@ RUN dotnet publish -c Release -o dist/ docker-demo-dotnet.csproj
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 LABEL author="Shaikkhajaibrahim"
+LABEL project="ltecommerce"
 COPY --from=build /src/dist /myapp
 WORKDIR /myapp
 ENV ASPNETCORE_URLS="http://0.0.0.0:5000"
