@@ -1,4 +1,5 @@
 ﻿FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+LABEL author="khaja"
 ADD . /src
 WORKDIR /src
 RUN dotnet publish -c Release -o dist/ docker-demo-dotnet.csproj
