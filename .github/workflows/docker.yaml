@@ -15,5 +15,13 @@ jobs:
         run: docker build -t ${{ secrets.USERNAME }}/dotnet:${{ github.run_id }} .
       - name: Pushing the image to the DockerHub
         run: docker push ${{ secrets.USERNAME }}/dotnet:${{ github.run_id }}
-        
+      - name: Trivy scan
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: ${{ secrets.USERNAME }}/dotnet:${{ github.run_id }}
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'            
 
