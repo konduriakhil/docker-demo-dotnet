@@ -1,0 +1,17 @@
+name: Docker_Practice
+on: push
+jobs:
+  docker_build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PAT }}
+      - name: Docker Image Build
+        run: docker build -t ${{ secrets.USERNAME }}/dotnet:${{ github.run_id }} .
+      - name: Pushing the image to the DockerHub
+        run: docker push ${{ secrets.USERNAME }}/dotnet:${{ github.run_id }}
