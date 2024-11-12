@@ -13,20 +13,23 @@ jobs:
           password: ${{ secrets.PASSWORD }}
       - name: Docker Image Build
         run: docker build -t ${{ secrets.USERNAME }}/dotnet:${{ github.run_id }} .
-      - name: Pushing the image to the DockerHub
-        run: docker push ${{ secrets.USERNAME }}/dotnet:${{ github.run_id }}
+
       - name: Manual Trivy Setup
         uses: aquasecurity/setup-trivy@v0.2.0
         with:
           cache: true
           version: v0.56.1            
-      - name: Run Trivy vulnerability scanner in repo mode
-        uses: aquasecurity/trivy-action@master
+      - name: Scan Docker Image for vulnerabilities
+        uses: aquasecurity/trivy-action@0.28.0
         with:
-          scan-type: 'fs'
-          ignore-unfixed: true
+          image-ref: ${{ secrets.USERNAME }}/dotnet:${{ github.run_id }}
           format: 'sarif'
           output: 'trivy-results.sarif'
-          severity: 'CRITICAL'
-          skip-setup-trivy: true
   
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+      - name: Pushing the image to the DockerHub
+        run: docker push ${{ secrets.USERNAME }}/dotnet:${{ github.run_id }}          
