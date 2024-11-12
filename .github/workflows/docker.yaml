@@ -1,5 +1,6 @@
 name: Docker_Practice
-on: push
+on:
+  workflow_dispatch:
 jobs:
   docker_build:
     runs-on: ubuntu-latest

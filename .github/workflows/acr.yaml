@@ -9,7 +9,7 @@ jobs:
       - name: Login to ACR
         uses: azure/docker-login@v2
         with: 
-          login-server: qtdotnet.azurecr.io
+          login-server: ${{ secrets.ACR_LOGIN_SERVER }}
           username: ${{ vars.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
       - name: Building the Docker Image
